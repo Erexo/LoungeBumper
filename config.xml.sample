@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config>
+	<email>user@example.com</email>
+	<password>secret</password>
+	<shopName>Username</shopName>
+	<tradePartner>00000000</tradePartner>
+	<tradeToken>3jn30gkj304</tradeToken>
+	<buyPercent>83</buyPercent>
+	
+	<bumpGroup>
+		<name>Offers</name>
+		<refresh>6</refresh>
+		<active>true</active>
+		<tradeID>221026768</tradeID>
+		<tradeID>214154961</tradeID>
+		<tradeID>214157357</tradeID>
+		<tradeID>214159097</tradeID>
+	</bumpGroup>
+	
+	<tradeOffer>
+		<tradeID>221026768</tradeID>
+		<analystID>289999500</analystID>
+		<analystID>289999771</analystID>
+		<analystID>289999547</analystID>
+		<analystID>289999477</analystID>
+		<analystID>70209151</analystID>
+		<analystID>1869</analystID>
+		<analystID>1518</analystID>
+		<analystID>1633</analystID>
+	</tradeOffer>
+	
+	<tradeOffer>
+		<tradeID>214154961</tradeID>
+		<analystID>120649</analystID>
+		<analystID>120593</analystID>
+		<analystID>120725</analystID>
+		<analystID>187277957</analystID>
+		<analystID>187629359</analystID>
+		<analystID>289999542</analystID>
+		<analystID>289999458</analystID>
+		<analystID>1879</analystID>
+	</tradeOffer>
+	
+	<tradeOffer>
+		<tradeID>214157357</tradeID>
+		<analystID>289999533</analystID>
+		<analystID>289999526</analystID>
+		<analystID>17470</analystID>
+		<analystID>289999519</analystID>
+		<analystID>289999513</analystID>
+		<analystID>289999507</analystID>
+		<analystID>65089994</analystID>
+		<analystID>289999505</analystID>
+	</tradeOffer>
+	
+	<tradeOffer>
+		<tradeID>214159097</tradeID>
+		<analystID>928</analystID>
+		<analystID>1760</analystID>
+		<analystID>120428</analystID>
+		<analystID>120533</analystID>
+		<analystID>1110</analystID>
+		<analystID>1032</analystID>
+		<analystID>1582</analystID>
+		<analystID>115787731</analystID>
+	</tradeOffer>
+</config>
