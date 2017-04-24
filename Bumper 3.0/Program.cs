@@ -12,16 +12,18 @@ namespace Bumper_3._0
 {
     public static class Program
     {
-        public static CookieAwareWebClient client = new CookieAwareWebClient();
-        public static string accName, accPass;
-        public static string shopName = "my";
-        public static string tradePartner,tradeToken = "";
-        public static int buyPercent = 82;
-        public static int timer, bumps = 0;
-        public static XmlDocument doc = new XmlDocument();
-        public static List<tradeOption> tradeOptions = new List<tradeOption>();
-        public static List<Offer> offers = new List<Offer>();
-        public static string version = "3.5";
+        public static CookieAwareWebClient Client = new CookieAwareWebClient();
+        public static string AccName { get; set; }
+        public static string AccPass { get; set; }
+        public static string TradePartner { get; set; }
+        public static string TradeToken { get; set; }
+        public static string ShopName = "my";
+        public static int BuyPercent = 82;
+        public static int Timer, Bumps = 0;
+        public static XmlDocument Doc = new XmlDocument();
+        public static List<TradeOption> TradeOptions = new List<TradeOption>();
+        public static List<Offer> Offers = new List<Offer>();
+        public static string Version = "3.5";
 
         static void Main(string[] args)
         {
@@ -30,7 +32,7 @@ namespace Bumper_3._0
             #region entrance
 
             Console.WriteLine();
-            string top = "CSGOLOUNGE BUMPER ver. " + version;
+            string top = "CSGOLOUNGE BUMPER ver. " + Version;
             string bottom = "Coded by Erexo";
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.Write("@".Repeat(Console.WindowWidth));
@@ -45,27 +47,27 @@ namespace Bumper_3._0
 
             if (args.Length > 1)
             {
-                accName = args[0];
-                accPass = args[1];
+                AccName = args[0];
+                AccPass = args[1];
             }
             else if (File.Exists("config.xml"))
             {
                 Log("Loading config", false);
                 try
                 {
-                    doc.Load("config.xml");
-                    if (doc.DocumentElement.SelectSingleNode("email") != null)
-                        accName = doc.DocumentElement.SelectSingleNode("email").InnerText;
-                    if (doc.DocumentElement.SelectSingleNode("password") != null)
-                        accPass = doc.DocumentElement.SelectSingleNode("password").InnerText;
-                    if (doc.DocumentElement.SelectSingleNode("shopName") != null)
-                        shopName = doc.DocumentElement.SelectSingleNode("shopName").InnerText;
-                    if (doc.DocumentElement.SelectSingleNode("buyPercent") != null)
-                        buyPercent = int.Parse(doc.DocumentElement.SelectSingleNode("buyPercent").InnerText);
-                    if (doc.DocumentElement.SelectSingleNode("tradePartner") != null)
-                        tradePartner = doc.DocumentElement.SelectSingleNode("tradePartner").InnerText;
-                    if (doc.DocumentElement.SelectSingleNode("tradeToken") != null)
-                        tradeToken = doc.DocumentElement.SelectSingleNode("tradeToken").InnerText;
+                    Doc.Load("config.xml");
+                    if (Doc.DocumentElement.SelectSingleNode("email") != null)
+                        AccName = Doc.DocumentElement.SelectSingleNode("email").InnerText;
+                    if (Doc.DocumentElement.SelectSingleNode("password") != null)
+                        AccPass = Doc.DocumentElement.SelectSingleNode("password").InnerText;
+                    if (Doc.DocumentElement.SelectSingleNode("shopName") != null)
+                        ShopName = Doc.DocumentElement.SelectSingleNode("shopName").InnerText;
+                    if (Doc.DocumentElement.SelectSingleNode("buyPercent") != null)
+                        BuyPercent = int.Parse(Doc.DocumentElement.SelectSingleNode("buyPercent").InnerText);
+                    if (Doc.DocumentElement.SelectSingleNode("tradePartner") != null)
+                        TradePartner = Doc.DocumentElement.SelectSingleNode("tradePartner").InnerText;
+                    if (Doc.DocumentElement.SelectSingleNode("tradeToken") != null)
+                        TradeToken = Doc.DocumentElement.SelectSingleNode("tradeToken").InnerText;
                     loadTrades();
                     loadOffers();
                     Console.ForegroundColor = ConsoleColor.Green;
@@ -83,7 +85,7 @@ namespace Bumper_3._0
 
             #endregion
 
-            if (string.IsNullOrEmpty(accName) || string.IsNullOrEmpty(accPass))
+            if (string.IsNullOrEmpty(AccName) || string.IsNullOrEmpty(AccPass))
             {
                 Console.WriteLine("Usage: [" + Path.GetFileName(System.Reflection.Assembly.GetEntryAssembly().Location) + " email password]");
                 return;
@@ -146,8 +148,8 @@ namespace Bumper_3._0
                 switch (command)
                 {
                     case "status":
-                        Log(">Bumps: " + bumps.ToString());
-                        Log(">Current timer: " + timer.ToString());
+                        Log(">Bumps: " + Bumps.ToString());
+                        Log(">Current timer: " + Timer.ToString());
                         break;
                     case "quit":
                     case "q":
@@ -192,7 +194,7 @@ namespace Bumper_3._0
         }
         static string getLLSS()
         {
-            string loginString = client.DownloadString("https://csgolounge.com/");
+            string loginString = Client.DownloadString("https://csgolounge.com/");
             string llss = loginString.Substring(loginString.IndexOf("var lngSlt = '") + "var lngSlt = '".Length, 32);
             return llss;
         }
@@ -200,11 +202,11 @@ namespace Bumper_3._0
         {
             var values = new NameValueCollection
                     {
-                        { "em", accName},
-                        { "pass", accPass},
+                        { "em", AccName},
+                        { "pass", AccPass},
                         { "llss", getLLSS()}
                     };
-            client.UploadValues("https://csgolounge.com/ajax/logIn.php", values);
+            Client.UploadValues("https://csgolounge.com/ajax/logIn.php", values);
 
             if (!loggedIn())
             {
@@ -221,7 +223,7 @@ namespace Bumper_3._0
         }
         static bool loggedIn()
         {
-            string loginString = client.DownloadString("https://csgolounge.com/");
+            string loginString = Client.DownloadString("https://csgolounge.com/");
             if (!loginString.Contains("LogInSignUpModal"))
             {
                 return true;
@@ -239,7 +241,7 @@ namespace Bumper_3._0
                 return bumpList;
             }
 
-            string page = client.DownloadString("https://csgolounge.com/mytrades");
+            string page = Client.DownloadString("https://csgolounge.com/mytrades");
             string[] pageLines = page.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
             foreach (string pageLine in pageLines)
             {
@@ -272,8 +274,8 @@ namespace Bumper_3._0
                         {
                             { "trade", bumpV}
                         };
-                        client.UploadValues("https://csgolounge.com/ajax/bumpTrade.php", values);
-                        bumps++;
+                        Client.UploadValues("https://csgolounge.com/ajax/bumpTrade.php", values);
+                        Bumps++;
                         if (string.IsNullOrEmpty(name))
                             Log("Trade [" + bumpV + "] bumped");
                         else
@@ -289,11 +291,11 @@ namespace Bumper_3._0
         }
         static void loadTrades()
         {
-            tradeOptions.Clear();
+            TradeOptions.Clear();
 
-            if (doc.DocumentElement.SelectNodes("bumpGroup").Count > 0)
+            if (Doc.DocumentElement.SelectNodes("bumpGroup").Count > 0)
             {
-                foreach (XmlNode bumpGroup in doc.DocumentElement.SelectNodes("bumpGroup"))
+                foreach (XmlNode bumpGroup in Doc.DocumentElement.SelectNodes("bumpGroup"))
                 {
                     string nodeName = "";
                     int nodeTime = 10;
@@ -328,18 +330,18 @@ namespace Bumper_3._0
 
                     if (nodeTrades.Count > 0)
                     {
-                        tradeOptions.Add(new tradeOption(nodeName, nodeTime, nodeActive, nodeTrades));
+                        TradeOptions.Add(TradeOption.Create(nodeName, nodeTime, nodeActive, nodeTrades));
                     }
                 }
             }
         }
         static void loadOffers()
         {
-            offers.Clear();
+            Offers.Clear();
 
-            if (doc.DocumentElement.SelectNodes("tradeOffer").Count > 0)
+            if (Doc.DocumentElement.SelectNodes("tradeOffer").Count > 0)
             {
-                foreach (XmlNode tradeOffer in doc.DocumentElement.SelectNodes("tradeOffer"))
+                foreach (XmlNode tradeOffer in Doc.DocumentElement.SelectNodes("tradeOffer"))
                 {
                     string tradeID = "";
                     List<string> itemTrades = new List<string>();
@@ -361,7 +363,7 @@ namespace Bumper_3._0
 
                     if (!string.IsNullOrEmpty(tradeID) && itemTrades.Count > 0)
                     {
-                        offers.Add(new Offer(tradeID, itemTrades.ToArray()));
+                        Offers.Add(Offer.Create(tradeID, itemTrades.ToArray()));
                     }
                 }
             }
@@ -380,57 +382,57 @@ namespace Bumper_3._0
                     continue;
                 }
 
-                if(timer % (60*60) == 0)
+                if(Timer % (60*60) == 0)
                     updatePrices();
 
                 startTimeInMillis = System.Environment.TickCount;
-                if (tradeOptions.Count < 1)
-                    if (timer % 3 == 0)
+                if (TradeOptions.Count < 1)
+                    if (Timer % 3 == 0)
                         bumpTrade();
                     else { }
                 else
                 {
                     try
                     {
-                        foreach (tradeOption to in tradeOptions)
+                        foreach (TradeOption to in TradeOptions)
                         {
-                            if (to.Active && timer % to.Time == 0)
+                            if (to.Active && Timer % to.Time == 0)
                                 bumpTrade(to.Trades, to.Name);
                         }
                     }
                     catch { }
                 }
 
-                timer++;
+                Timer++;
                 Thread.Sleep(Math.Max(0, 1000 - (System.Environment.TickCount - startTimeInMillis)));
             }
         }
         static void updatePrices()
         {
-            if (offers.Count < 1)
+            if (Offers.Count < 1)
                 return;
 
             Log("Updating prices...");
 
             try
             {
-                foreach (Offer of in offers)
+                foreach (Offer of in Offers)
                 {
-                    string description = "░▒▓   Welcome in "+ shopName +" trade shop   ▓▒░\n░▒▓ Im buying every item listed here ▓▒░\n\n";
-                    foreach (itemPrice item in getPrices(of.items))
+                    string description = "░▒▓   Welcome in "+ ShopName +" trade shop   ▓▒░\n░▒▓ Im buying every item listed here ▓▒░\n\n";
+                    foreach (ItemPrice item in getPrices(of.Items))
                     {
                         description += "♯ " + item.Name + " (" + item.Exterior + ")  ▪ " + item.PriceTaxKeys + " keys\n";
                     }
                     description += "\n              ►   send me trade offer   ◄\n";
-                    if (!string.IsNullOrEmpty(tradePartner) && !string.IsNullOrEmpty(tradeToken))
-                        description += "https://steamcommunity.com/tradeoffer/new/?partner=" + tradePartner + "&token=" + tradeToken;
+                    if (!string.IsNullOrEmpty(TradePartner) && !string.IsNullOrEmpty(TradeToken))
+                        description += "https://steamcommunity.com/tradeoffer/new/?partner=" + TradePartner + "&token=" + TradeToken;
 
                     var values = new NameValueCollection
                     {
                         { "trade", of.ID},
                         { "notes", description}
                     };
-                    client.UploadValues("https://csgolounge.com/ajax/tradeNoteSave.php", values);
+                    Client.UploadValues("https://csgolounge.com/ajax/tradeNoteSave.php", values);
                 }
                 Log("Prices updated succesfully");
             }
@@ -457,9 +459,9 @@ namespace Bumper_3._0
             return false;
         }
 
-        public static List<itemPrice> getPrices(string[] itemsURL)
+        public static List<ItemPrice> getPrices(string[] itemsURL)
         {
-            List<itemPrice> returnList = new List<itemPrice>();
+            List<ItemPrice> returnList = new List<ItemPrice>();
 
             if (itemsURL.Length < 1)
                 return returnList;
@@ -500,7 +502,7 @@ namespace Bumper_3._0
                                             {
                                                 found = true;
                                                 float fPrice = float.Parse(price, System.Globalization.CultureInfo.InvariantCulture);
-                                                returnList.Add(new itemPrice(name, exterior, fPrice));
+                                                returnList.Add(new ItemPrice(name, exterior, fPrice));
                                                 break;
                                             }
                                             catch(Exception ex)
@@ -528,23 +530,28 @@ namespace Bumper_3._0
     }
 
     //////////////////////////////
-    public class tradeOption
+    public class TradeOption
     {
         public string Name { get; private set; }
         public int Time { get; private set; }
         public bool Active { get; private set; }
         public List<string> Trades { get; private set; }
 
-        public tradeOption(string Name, int Time, bool Active, List<string> Trades)
+        private TradeOption(string Name, int Time, bool Active, List<string> Trades)
         {
             this.Name = Name;
             this.Time = Time;
             this.Active = Active;
             this.Trades = Trades;
         }
+
+        public static TradeOption Create(string name, int time, bool active, List<string> trades)
+        {
+            return new TradeOption(name, time, active, trades);
+        }
     }
 
-    public class itemPrice
+    public class ItemPrice
     {
         public string Name { get; private set; }
         public string Exterior { get; private set; }
@@ -560,11 +567,11 @@ namespace Bumper_3._0
         {
             get
             {
-                return (int)Math.Round((PriceUSD / 2.50) * Program.buyPercent / 100);
+                return (int)Math.Round((PriceUSD / 2.50) * Program.BuyPercent / 100);
             }
         }
 
-        public itemPrice(string Name, string Exterior, float PriceUSD)
+        public ItemPrice(string Name, string Exterior, float PriceUSD)
         {
             this.Name = Name;
             this.Exterior = Exterior;
@@ -575,11 +582,17 @@ namespace Bumper_3._0
     public class Offer
     {
         public string ID { get; private set; }
-        public string[] items { get; private set; }
-        public Offer(string IDs, string[] itemss)
+        public string[] Items { get; private set; }
+
+        public Offer(string ID, string[] Items)
         {
-            ID = IDs;
-            items = itemss;
+            this.ID = ID;
+            this.Items = Items;
+        }
+
+        public static Offer Create(string ID, string[] Items)
+        {
+            return new Offer(ID, Items);
         }
     }
 
